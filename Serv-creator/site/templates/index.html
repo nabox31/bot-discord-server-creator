@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Serveur Discord</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .instructions h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 6px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .result {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .result h3 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+        
+        .code-display {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            text-align: center;
+            margin: 15px 0;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .add-bot-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .add-bot-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .example-card {
+            background: white;
+            border: 1px solid #e1e8ed;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .example-card:hover {
+            border-color: #3498db;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+        }
+        
+        .example-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .example-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .example-desc {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #721c24;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .add-bot-btn {
+                position: static;
+                display: block;
+                width: 100%;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="https://discord.com/oauth2/authorize?client_id=000000000&permissions=268446768&integration_type=0&scope=bot" class="add-bot-btn" target="_blank" rel="noopener noreferrer">➕ Ajouter le bot</a>
+    
+    <div class="container">
+        <header>
+            <h1>Générateur de Serveur Discord</h1>
+            <p class="subtitle">Créez votre serveur Discord personnalisé en quelques clics</p>
+        </header>
+        
+        <div class="card">
+            <div class="instructions">
+                <h3>📋 Comment créer votre serveur</h3>
+                <ol>
+                    <li><strong>Ajoutez le bot</strong> sur votre serveur Discord via le bouton en haut à droite</li>
+                    <li><strong>Décrivez votre serveur idéal</strong> dans le champ ci-dessous</li>
+                    <li><strong>Générez votre code</strong> unique en cliquant sur "Générer"</li>
+                    <li><strong>Utilisez la commande</strong> <code>!create VOTRE_CODE</code> sur Discord</li>
+                    <li><strong>Profitez</strong> de votre serveur automatiquement configuré !</li>
+                </ol>
+            </div>
+            
+            <div class="form-group">
+                <label for="prompt">Décrivez votre serveur Discord</label>
+                <textarea name="prompt" id="prompt" placeholder="Exemples :
+&#10;• Serveur gaming Fortnite avec salons pour squads, tournois et partage
+&#10;• Communauté esthétique pastel avec emojis 🌸 et vocaux chill
+&#10;• Serveur RP Minecraft avec factions et commerce
+&#10;• Serveur étude avec salons par matière et aide aux devoirs"></textarea>
+            </div>
+            
+            <button type="submit" class="btn" onclick="generateServer()">🚀 Générer mon serveur</button>
+            
+            {% if code %}
+            <div class="result">
+                <h3>✅ Serveur généré avec succès !</h3>
+                <p><strong>Votre code unique :</strong> {{ code }}</p>
+                <div class="code-display">!create {{ code }}</div>
+                <p>Utilisez cette commande sur votre serveur Discord pour créer la structure.</p>
+            </div>
+            {% endif %}
+            
+            {% if error %}
+            <div class="error">
+                <strong>❌ Erreur :</strong> {{ error }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="card">
+            <h3 style="margin-bottom: 20px; color: #2c3e50;">💡 Idées de serveurs populaires</h3>
+            <div class="examples">
+                <div class="example-card" onclick="setExample('Serveur gaming Fortnite avec salons pour squads, tournois et partage de vidéos')">
+                    <div class="example-icon">🎮</div>
+                    <div class="example-title">Gaming</div>
+                    <div class="example-desc">Fortnite, Minecraft, Valorant...</div>
+                </div>
+                <div class="example-card" onclick="setExample('Serveur esthétique pastel avec emojis 🌸✨ et vocaux chill pour relaxation')">
+                    <div class="example-icon">✨</div>
+                    <div class="example-title">Esthétique</div>
+                    <div class="example-desc">Style pastel, emojis, vibes</div>
+                </div>
+                <div class="example-card" onclick="setExample('Serveur RP Minecraft avec factions, commerce et quêtes personnalisées')">
+                    <div class="example-icon">🎭</div>
+                    <div class="example-title">Role-Play</div>
+                    <div class="example-desc">Minecraft, GTA, univers...</div>
+                </div>
+                <div class="example-card" onclick="setExample('Serveur communautaire avec salons généraux, annonces et événements')">
+                    <div class="example-icon">👥</div>
+                    <div class="example-title">Communauté</div>
+                    <div class="example-desc">Partage, discussions, events</div>
+                </div>
+                <div class="example-card" onclick="setExample('Serveur musique avec partage de playlists, découvertes et vocaux écoute')">
+                    <div class="example-icon">🎵</div>
+                    <div class="example-title">Musique</div>
+                    <div class="example-desc">Playlists, découvertes, vibes</div>
+                </div>
+                <div class="example-card" onclick="setExample('Serveur étude avec salons par matière, aide aux devoirs et sessions de travail')">
+                    <div class="example-icon">📚</div>
+                    <div class="example-title">Étude</div>
+                    <div class="example-desc">Devoirs, révisions, collaboration</div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Créé par MR NAB • © 2024</p>
+        </footer>
+    </div>
+    
+    <script>
+        function setExample(text) {
+            document.getElementById('prompt').value = text;
+        }
+        
+        function generateServer() {
+            const prompt = document.getElementById('prompt').value.trim();
+            if (!prompt) {
+                alert('Veuillez décrire votre serveur');
+                return;
+            }
+            
+            // Créer et soumettre le formulaire
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.style.display = 'none';
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'prompt';
+            input.value = prompt;
+            
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+        
+        // Support pour Enter dans textarea
+        document.getElementById('prompt').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                e.preventDefault();
+                generateServer();
+            }
+        });
+    </script>
+</body>
+</html>
